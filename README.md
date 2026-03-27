@@ -36,4 +36,6 @@ Mapping to the new Django architecture is documented in `docs/feature_parity_map
 
 ## API Plan
 
-API endpoints are intentionally deferred and documented in `docs/api_phase_plan.md`.
+Phase 2 API is now available with JWT auth at `/api/v1/`.
+Reference: `docs/api_v1_reference.md`.
+Further expansion is documented in `docs/phases.md` and `docs/api_phase_plan.md`.
