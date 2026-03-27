@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db import connection
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import PermissionDenied
@@ -91,7 +92,19 @@ from .serializers import (
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def health(request):
-    return Response({"status": "ok", "user": request.user.username})
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT 1")
+        db_ok = cursor.fetchone()[0] == 1
+    return Response({"status": "ok", "user": request.user.username, "database": "ok" if db_ok else "error"})
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def readiness(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT 1")
+        db_ok = cursor.fetchone()[0] == 1
+    return Response({"ready": db_ok})
 
 
 @api_view(["GET"])

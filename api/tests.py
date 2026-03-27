@@ -30,6 +30,12 @@ class APISmokeTests(APITestCase):
         response = self.client.get(reverse("api-me"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["username"], "apiuser")
+        health_response = self.client.get(reverse("api-health"))
+        self.assertEqual(health_response.status_code, 200)
+        self.assertEqual(health_response.data["database"], "ok")
+        readiness_response = self.client.get(reverse("api-readiness"))
+        self.assertEqual(readiness_response.status_code, 200)
+        self.assertTrue(readiness_response.data["ready"])
 
     def test_student_list(self):
         Student.objects.create(school=self.school, admission_no="A1", first_name="Ria")

@@ -68,6 +68,7 @@ from .views import (
     VisitorViewSet,
     health,
     me,
+    readiness,
 )
 
 router = DefaultRouter()
@@ -148,6 +149,7 @@ router.register("frontoffice/service-requests", ServiceRequestViewSet, basename=
 
 urlpatterns = [
     path("v1/health/", health, name="api-health"),
+    path("v1/readiness/", readiness, name="api-readiness"),
     path("v1/me/", me, name="api-me"),
     path("v1/auth/token/", TokenObtainPairThrottledView.as_view(), name="token_obtain_pair"),
     path("v1/auth/token/refresh/", TokenRefreshThrottledView.as_view(), name="token_refresh"),
