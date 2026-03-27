@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="portal-head teacher-head mb-4">
+  <h1>Teacher Workspace</h1>
+  <p>Attendance workflow, pending leave visibility, and class tracking in one place.</p>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="kpi-card"><div class="kpi">{{ student_count }}</div><div class="label">Visible Students</div></div></div>
+  <div class="col-md-3"><div class="kpi-card"><div class="kpi">{{ today_attendance|length }}</div><div class="label">Recent Student Attendance</div></div></div>
+  <div class="col-md-3"><div class="kpi-card"><div class="kpi">{{ today_staff_attendance|length }}</div><div class="label">Recent Staff Attendance</div></div></div>
+  <div class="col-md-3"><div class="kpi-card"><div class="kpi">{{ open_leaves|length }}</div><div class="label">Pending Leave Requests</div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-md-7">
+    <div class="card border-0 shadow-sm"><div class="card-body">
+      <h5>Recent Student Attendance</h5>
+      <table class="table mb-0">
+        <thead><tr><th>Date</th><th>Student</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for r in today_attendance %}
+          <tr><td>{{ r.attendance_date }}</td><td>{{ r.student }}</td><td>{{ r.status }}</td></tr>
+          {% empty %}<tr><td colspan="3">No records</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div></div>
+  </div>
+  <div class="col-md-5">
+    <div class="card border-0 shadow-sm"><div class="card-body">
+      <h5>Pending Leaves</h5>
+      <ul class="list-group list-group-flush">
+        {% for leave in open_leaves %}
+        <li class="list-group-item">{{ leave.leave_type }} - {{ leave.status }}</li>
+        {% empty %}<li class="list-group-item">No pending leave</li>{% endfor %}
+      </ul>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

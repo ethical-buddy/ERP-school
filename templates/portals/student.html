@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="portal-head student-head mb-4">
+  <h1>Student Portal</h1>
+  <p>Attendance, fee receipts, and recent school updates.</p>
+</div>
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm"><div class="card-body">
+      <h5>Recent Attendance</h5>
+      <table class="table">
+        <thead><tr><th>Date</th><th>Student</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for r in attendance_records %}
+          <tr><td>{{ r.attendance_date }}</td><td>{{ r.student }}</td><td>{{ r.status }}</td></tr>
+          {% empty %}<tr><td colspan="3">No attendance data</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div></div>
+  </div>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm mb-3"><div class="card-body">
+      <h5>Recent Fee Invoices</h5>
+      <table class="table mb-0">
+        <thead><tr><th>Invoice</th><th>Amount</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for i in invoices %}
+          <tr><td>{{ i.invoice_no }}</td><td>{{ i.total_amount }}</td><td>{{ i.status }}</td></tr>
+          {% empty %}<tr><td colspan="3">No invoices found</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div></div>
+    <div class="card border-0 shadow-sm"><div class="card-body">
+      <h5>Recent Admissions</h5>
+      <ul class="list-group list-group-flush">
+        {% for s in recent_students %}
+        <li class="list-group-item">{{ s.admission_no }} - {{ s.first_name }} {{ s.last_name }} ({{ s.course }} {{ s.section }})</li>
+        {% empty %}<li class="list-group-item">No data</li>{% endfor %}
+      </ul>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

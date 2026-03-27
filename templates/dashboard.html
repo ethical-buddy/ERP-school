@@ -18,6 +18,17 @@
     <div class="col-md-3"><a class="module-card" href="/attendance/"><h5>Attendance</h5><p>Daily attendance and leave</p></a></div>
     <div class="col-md-3"><a class="module-card" href="/finance/"><h5>Finance</h5><p>Fee invoicing and accounts</p></a></div>
 </div>
+<div class="row g-3 mb-4">
+    {% if is_admin_portal %}
+    <div class="col-md-4"><a class="module-card" href="/portal/admin/"><h5>Admin Portal</h5><p>Strategic controls and financial oversight.</p></a></div>
+    {% endif %}
+    {% if is_teacher_portal %}
+    <div class="col-md-4"><a class="module-card" href="/portal/teacher/"><h5>Teacher Portal</h5><p>Attendance and daily classroom workflow.</p></a></div>
+    {% endif %}
+    {% if is_student_portal %}
+    <div class="col-md-4"><a class="module-card" href="/portal/student/"><h5>Student Portal</h5><p>Attendance and fee tracking view.</p></a></div>
+    {% endif %}
+</div>
 <div class="row g-3">
     <div class="col-md-3"><a class="module-card muted" href="/module/academics/"><h6>Academics</h6></a></div>
     <div class="col-md-3"><a class="module-card muted" href="/module/transport/"><h6>Transport</h6></a></div>

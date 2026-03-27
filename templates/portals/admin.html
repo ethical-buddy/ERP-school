@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="portal-head admin-head mb-4">
+  <h1>Admin Control Hub</h1>
+  <p>High-level school operations across academics, finance, attendance, and compliance.</p>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ student_count }}</div><div class="label">Students</div></div></div>
+  <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ staff_count }}</div><div class="label">Staff</div></div></div>
+  <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ invoice_count }}</div><div class="label">Invoices</div></div></div>
+  <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ expense_count }}</div><div class="label">Expenses</div></div></div>
+  <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ pending_leave_count }}</div><div class="label">Pending Leaves</div></div></div>
+</div>
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <h5 class="mb-3">Latest Invoices</h5>
+    <table class="table">
+      <thead><tr><th>Invoice</th><th>Student</th><th>Amount</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for i in recent_invoices %}
+        <tr><td>{{ i.invoice_no }}</td><td>{{ i.student }}</td><td>{{ i.total_amount }}</td><td>{{ i.status }}</td></tr>
+        {% empty %}
+        <tr><td colspan="4">No records</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
