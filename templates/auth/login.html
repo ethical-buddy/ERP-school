@@ -1,17 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-4">
-                <h3 class="mb-3">Sign in</h3>
-                <form method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button class="btn btn-primary w-100">Login</button>
-                </form>
-            </div>
+<div class="login-wrap">
+  <div class="row g-0 login-shell shadow-lg">
+    <div class="col-lg-7 d-none d-lg-block login-left p-4 p-xl-5">
+      <div class="login-brand mb-4">BBEG School ERP</div>
+      <h2 class="login-headline mb-3">One platform for admissions, attendance, exams and fees.</h2>
+      <p class="login-sub">Modern ERP experience inspired by your previous BBEG login flow, optimized for speed and clarity.</p>
+      <div class="login-panels mt-4">
+        <div class="panel-item">
+          <h6>Academic Setup</h6>
+          <p>Play, Nursery, LKG, UKG, Class 1 to 12, section and subject structure.</p>
         </div>
+        <div class="panel-item">
+          <h6>Teacher Workbench</h6>
+          <p>Class teacher attendance panel and exam marks upload with practical/internal split.</p>
+        </div>
+        <div class="panel-item">
+          <h6>Parent-ready Student View</h6>
+          <p>Isolated portal for attendance and fee visibility for each mapped student account.</p>
+        </div>
+      </div>
     </div>
+    <div class="col-lg-5 p-4 p-xl-5 login-right">
+      <div class="login-card">
+        <h3 class="mb-1">Welcome Back</h3>
+        <p class="text-muted mb-4">Sign in to continue</p>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label" for="id_username">Username</label>
+            <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" class="form-control" required id="id_username">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="id_password">Password</label>
+            <input type="password" name="password" autocomplete="current-password" class="form-control" required id="id_password">
+          </div>
+          <button class="btn btn-primary w-100 login-btn-modern">Sign In</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -1,18 +1,55 @@
 :root {
   --bg-1: #0b3a53;
   --bg-2: #15708a;
-  --bg-3: #f3f7fb;
+  --bg-page: #f6fbff;
   --ink: #102235;
   --muted: #688099;
   --card: #ffffff;
+  --border: #dfeaf2;
+  --hero: linear-gradient(120deg, #072a3d, #125f76);
 }
-body { background: radial-gradient(circle at top right, #d8ecf7, #eef4f9 45%, #f7fafc 80%); color: var(--ink); }
+
+body[data-theme="dark"] {
+  --bg-1: #111827;
+  --bg-2: #1f2937;
+  --bg-page: #0b1220;
+  --ink: #e5ecf7;
+  --muted: #9cb0c8;
+  --card: #131d2f;
+  --border: #273244;
+  --hero: linear-gradient(120deg, #18263f, #0f4a63);
+}
+
+body {
+  background: radial-gradient(circle at top right, #d8ecf7, #eef4f9 45%, var(--bg-page) 80%);
+  color: var(--ink);
+}
+body[data-theme="dark"] {
+  background: radial-gradient(circle at top right, #1a2a3f, #101828 45%, var(--bg-page) 80%);
+}
+
 .app-nav { background: linear-gradient(92deg, var(--bg-1), var(--bg-2)); }
-.hero { background: linear-gradient(120deg, #072a3d, #125f76); }
-.kpi-card { background: var(--card); border-radius: 14px; padding: 16px; box-shadow: 0 8px 24px rgba(14, 41, 65, 0.08); }
+.hero { background: var(--hero); }
+.kpi-card, .card {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--border) !important;
+  border-radius: 14px;
+}
+.kpi-card { padding: 16px; box-shadow: 0 8px 24px rgba(14, 41, 65, 0.08); }
 .kpi { font-size: 1.45rem; font-weight: 700; }
 .label { color: var(--muted); font-size: 0.9rem; }
-.module-card { display: block; background: var(--card); border-radius: 14px; padding: 16px; text-decoration: none; color: var(--ink); box-shadow: 0 8px 24px rgba(14, 41, 65, 0.08); min-height: 110px; }
+.module-card {
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  text-decoration: none;
+  color: var(--ink);
+  box-shadow: 0 8px 24px rgba(14, 41, 65, 0.08);
+  min-height: 110px;
+}
 .module-card:hover { transform: translateY(-2px); transition: 0.2s ease; color: var(--ink); }
 .module-card.muted { min-height: auto; }
 .portal-head { padding: 24px; border-radius: 18px; color: #fff; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12); }
@@ -21,3 +58,28 @@ body { background: radial-gradient(circle at top right, #d8ecf7, #eef4f9 45%, #f
 .admin-head { background: linear-gradient(130deg, #09304a, #0f6d8b); }
 .teacher-head { background: linear-gradient(130deg, #1e3b19, #3e8f30); }
 .student-head { background: linear-gradient(130deg, #4d2e0c, #b56a20); }
+
+.table { color: var(--ink); }
+.list-group-item { background: transparent; color: var(--ink); border-color: var(--border); }
+
+.login-wrap { min-height: calc(100vh - 140px); display: flex; align-items: center; }
+.login-shell { border-radius: 24px; overflow: hidden; background: var(--card); border: 1px solid var(--border); }
+.login-left {
+  background: linear-gradient(135deg, #0e4863, #1e7898);
+  color: #fff;
+  position: relative;
+}
+.login-brand { font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.9; }
+.login-headline { font-size: 2rem; line-height: 1.2; max-width: 520px; }
+.login-sub { max-width: 520px; opacity: 0.9; }
+.login-panels { display: grid; gap: 14px; }
+.panel-item { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); padding: 14px; border-radius: 12px; backdrop-filter: blur(2px); }
+.panel-item h6 { margin-bottom: 6px; }
+.panel-item p { margin: 0; font-size: 0.9rem; }
+.login-right { background: var(--card); }
+.login-card { max-width: 420px; margin: auto; }
+.login-btn-modern { background: linear-gradient(135deg, #4e73df, #224abe); border: none; }
+
+@media (max-width: 992px) {
+  .login-wrap { min-height: auto; }
+}

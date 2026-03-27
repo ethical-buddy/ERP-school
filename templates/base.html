@@ -7,11 +7,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/app.css">
 </head>
-<body>
+<body data-theme="light">
 <nav class="navbar navbar-expand-lg app-nav mb-4">
     <div class="container-fluid">
         <a class="navbar-brand text-white" href="/dashboard/">ERP School</a>
         <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button id="themeToggle" class="btn btn-sm btn-outline-light" type="button">Dark</button>
             {% if primary_portal_url %}
             <a href="{{ primary_portal_url }}" class="btn btn-sm btn-outline-light">{{ primary_portal_label }}</a>
             {% endif %}
@@ -19,7 +20,9 @@
             <span class="badge text-bg-light">{{ current_school.name }}</span>
             {% endif %}
             {% if user.is_authenticated %}
+            {% if is_admin_portal %}
             <a href="/admin/" class="btn btn-sm btn-outline-light">Admin</a>
+            {% endif %}
             <a href="/logout/" class="btn btn-sm btn-light">Logout</a>
             {% endif %}
         </div>
@@ -33,5 +36,25 @@
     {% endif %}
     {% block content %}{% endblock %}
 </div>
+<script>
+  (function () {
+    const key = 'erp_theme';
+    const body = document.body;
+    const btn = document.getElementById('themeToggle');
+    const apply = (theme) => {
+      body.setAttribute('data-theme', theme);
+      if (btn) btn.textContent = theme === 'dark' ? 'Light' : 'Dark';
+    };
+    const saved = localStorage.getItem(key) || 'light';
+    apply(saved);
+    if (btn) {
+      btn.addEventListener('click', () => {
+        const next = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(key, next);
+        apply(next);
+      });
+    }
+  })();
+</script>
 </body>
 </html>

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="portal-head admin-head mb-4">
+  <h1>Exam & Report Card Control</h1>
+  <p>Manage exam components, upload marks, and prepare report card data.</p>
+  <a href="/exams/bulk-upload/" class="btn btn-light btn-sm mt-2">Bulk Upload Marks CSV</a>
+</div>
+<div class="card border-0 shadow-sm"><div class="card-body">
+  <h5>Configured Exams</h5>
+  <table class="table">
+    <thead><tr><th>ID</th><th>Class</th><th>Section</th><th>Subject</th><th>Date</th><th>Max Marks</th></tr></thead>
+    <tbody>
+      {% for e in exams %}
+      <tr><td>{{ e.id }}</td><td>{{ e.course.name }}</td><td>{{ e.section.name }}</td><td>{{ e.subject.name }}</td><td>{{ e.exam_date }}</td><td>{{ e.max_marks }}</td></tr>
+      {% empty %}<tr><td colspan="6">No exams configured. Create from Admin panel.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div></div>
+{% endblock %}

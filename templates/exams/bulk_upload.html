@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="portal-head teacher-head mb-4">
+  <h1>Exam Marks Upload</h1>
+  <p>Upload theory/internal/practical marks securely for assigned class exams.</p>
+</div>
+<div class="card border-0 shadow-sm"><div class="card-body">
+  <form method="post" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+    <div class="col-12">{{ form.exam.label_tag }} {{ form.exam }}</div>
+    <div class="col-12">{{ form.marks_file.label_tag }} {{ form.marks_file }}</div>
+    <div class="col-12"><button class="btn btn-success">Upload & Process</button></div>
+  </form>
+  <hr>
+  <p class="mb-1"><strong>CSV format:</strong> admission_no,theory,internal,practical,remarks</p>
+  <pre class="p-2 bg-light">ADM1001,62,18,17,Good
+ADM1002,55,16,15,Average</pre>
+</div></div>
+{% endblock %}
