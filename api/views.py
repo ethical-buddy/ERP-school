@@ -109,6 +109,24 @@ def readiness(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
+def metrics(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT 1")
+        db_ok = cursor.fetchone()[0] == 1
+    payload = {
+        "database_ok": db_ok,
+        "users_total": User.objects.count(),
+        "schools_total": School.objects.count(),
+        "students_total": Student.objects.count(),
+        "staff_total": Staff.objects.count(),
+        "attendance_total": StudentAttendance.objects.count(),
+        "invoices_total": FeeInvoice.objects.count(),
+    }
+    return Response(payload)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def me(request):
     return Response(UserSerializer(request.user).data)
 

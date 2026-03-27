@@ -18,6 +18,7 @@ class DashboardTests(TestCase):
         self.client.login(username="u1", password="StrongPass@12345")
         response = self.client.get(reverse("dashboard"))
         self.assertEqual(response.status_code, 200)
+        self.assertIn("X-Response-Time-Ms", response.headers)
 
 
 class SchoolModelTests(TestCase):

@@ -56,6 +56,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.SecurityHeadersMiddleware",
     "core.middleware.SchoolContextMiddleware",
+    "core.middleware.RequestTimingMiddleware",
 ]
 if HAS_WHITENOISE:
     MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
@@ -169,6 +170,13 @@ LOGGING = {
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
+        }
+    },
+    "loggers": {
+        "slow_requests": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
         }
     },
     "root": {

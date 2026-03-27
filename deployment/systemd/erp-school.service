@@ -1,0 +1,15 @@
+[Unit]
+Description=ERP School Django Service
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/erp-school
+EnvironmentFile=/opt/erp-school/.env
+ExecStart=/opt/erp-school/.venv/bin/gunicorn config.wsgi:application -c deployment/gunicorn.conf.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

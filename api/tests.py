@@ -36,6 +36,10 @@ class APISmokeTests(APITestCase):
         readiness_response = self.client.get(reverse("api-readiness"))
         self.assertEqual(readiness_response.status_code, 200)
         self.assertTrue(readiness_response.data["ready"])
+        metrics_response = self.client.get(reverse("api-metrics"))
+        self.assertEqual(metrics_response.status_code, 200)
+        self.assertIn("students_total", metrics_response.data)
+        self.assertEqual(metrics_response.data["database_ok"], True)
 
     def test_student_list(self):
         Student.objects.create(school=self.school, admission_no="A1", first_name="Ria")

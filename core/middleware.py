@@ -1,5 +1,10 @@
+import logging
+import time
+
 from accounts.models import UserProfile
 from core.models import School
+
+slow_logger = logging.getLogger("slow_requests")
 
 
 class SecurityHeadersMiddleware:
@@ -29,3 +34,25 @@ class SchoolContextMiddleware:
                 school = School.objects.filter(id=school_id, is_active=True).first()
         request.current_school = school
         return self.get_response(request)
+
+
+class RequestTimingMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        start = time.perf_counter()
+        response = self.get_response(request)
+        elapsed_ms = round((time.perf_counter() - start) * 1000, 2)
+        response["X-Response-Time-Ms"] = str(elapsed_ms)
+        threshold = 500.0
+        if elapsed_ms >= threshold:
+            slow_logger.warning(
+                "slow_request method=%s path=%s status=%s duration_ms=%s user=%s",
+                request.method,
+                request.path,
+                response.status_code,
+                elapsed_ms,
+                request.user.username if request.user.is_authenticated else "anonymous",
+            )
+        return response
