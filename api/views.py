@@ -242,6 +242,7 @@ class TimetableSlotViewSet(ReadWriteViewSet):
 
 
 class StudentViewSet(ReadWriteViewSet):
+    block_student_role = True
     queryset = Student.objects.select_related("course", "section").order_by("-id")
     serializer_class = StudentSerializer
     filterset_fields = ["course", "section", "gender", "is_active"]
@@ -316,12 +317,14 @@ class LeaveTypeViewSet(ReadWriteViewSet):
 
 
 class LeaveRequestViewSet(ReadWriteViewSet):
+    block_student_role = True
     queryset = LeaveRequest.objects.select_related("student", "staff", "leave_type").order_by("-id")
     serializer_class = LeaveRequestSerializer
     filterset_fields = ["leave_type", "student", "staff", "status"]
 
 
 class StudentAttendanceViewSet(ReadWriteViewSet):
+    block_student_role = True
     queryset = StudentAttendance.objects.select_related("student", "course", "section").order_by("-attendance_date", "-id")
     serializer_class = AttendanceSerializer
     filterset_fields = ["course", "section", "student", "status", "attendance_date"]
@@ -329,24 +332,28 @@ class StudentAttendanceViewSet(ReadWriteViewSet):
 
 
 class StaffAttendanceViewSet(ReadWriteViewSet):
+    block_student_role = True
     queryset = StaffAttendance.objects.select_related("staff").order_by("-attendance_date", "-id")
     serializer_class = StaffAttendanceSerializer
     filterset_fields = ["staff", "status", "attendance_date"]
 
 
 class FeeHeadViewSet(ReadWriteViewSet):
+    block_student_role = True
     queryset = FeeHead.objects.order_by("-id")
     serializer_class = FeeHeadSerializer
     search_fields = ["name"]
 
 
 class FeeStructureViewSet(ReadWriteViewSet):
+    block_student_role = True
     queryset = FeeStructure.objects.select_related("fee_head", "course").order_by("-id")
     serializer_class = FeeStructureSerializer
     filterset_fields = ["fee_head", "course"]
 
 
 class FeeInvoiceViewSet(ReadWriteViewSet):
+    block_student_role = True
     queryset = FeeInvoice.objects.select_related("student").order_by("-issue_date", "-id")
     serializer_class = FeeInvoiceSerializer
     filterset_fields = ["student", "status", "issue_date", "due_date"]
@@ -354,18 +361,21 @@ class FeeInvoiceViewSet(ReadWriteViewSet):
 
 
 class FeePaymentViewSet(ReadWriteViewSet):
+    block_student_role = True
     queryset = FeePayment.objects.select_related("invoice").order_by("-paid_on", "-id")
     serializer_class = FeePaymentSerializer
     filterset_fields = ["invoice", "payment_mode", "paid_on"]
 
 
 class ExpenseCategoryViewSet(ReadWriteViewSet):
+    block_student_role = True
     queryset = ExpenseCategory.objects.order_by("-id")
     serializer_class = ExpenseCategorySerializer
     search_fields = ["name"]
 
 
 class ExpenseEntryViewSet(ReadWriteViewSet):
+    block_student_role = True
     queryset = ExpenseEntry.objects.select_related("category").order_by("-expense_date", "-id")
     serializer_class = ExpenseEntrySerializer
     filterset_fields = ["category", "expense_date", "pay_mode"]

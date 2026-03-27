@@ -26,4 +26,32 @@
     </table>
   </div>
 </div>
+<div class="row g-3 mt-1">
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm"><div class="card-body">
+      <h5>Class Distribution</h5>
+      <canvas id="adminClassChart" height="160"></canvas>
+    </div></div>
+  </div>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm"><div class="card-body">
+      <h5>Quick Admin Actions</h5>
+      <div class="d-grid gap-2">
+        <a class="btn btn-outline-primary" href="/admin/academics/course/">Define Classes</a>
+        <a class="btn btn-outline-primary" href="/admin/academics/subject/">Define Subjects</a>
+        <a class="btn btn-outline-primary" href="/admin/academics/classteacherassignment/">Assign Class Teacher</a>
+        <a class="btn btn-outline-primary" href="/admin/academics/subjectteacherassignment/">Assign Subject Teacher</a>
+        <a class="btn btn-outline-primary" href="/admin/exams/exam/">Configure Exams & Report Cards</a>
+      </div>
+    </div></div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+new Chart(document.getElementById('adminClassChart'), {
+  type: 'bar',
+  data: {labels: [{% for item in class_distribution %}'{{ item.course__name|default:"NA" }}',{% endfor %}], datasets: [{label: 'Students', data: [{% for item in class_distribution %}{{ item.total }},{% endfor %}], backgroundColor: '#0f6d8b'}]},
+  options: {plugins: {legend: {display: false}}, scales: {y: {beginAtZero: true}}}
+});
+</script>
 {% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load dict_extras %}
+{% block content %}
+<div class="portal-head teacher-head mb-4">
+  <h1>Class Teacher Attendance</h1>
+  <p>Select assigned class and mark P / A / L in a single table.</p>
+</div>
+
+<div class="card border-0 shadow-sm mb-3"><div class="card-body">
+  <form method="get" class="row g-3 align-items-end">
+    <div class="col-md-5">
+      <label class="form-label">Class Assignment</label>
+      <select class="form-select" name="assignment_id" required>
+        <option value="">Select class</option>
+        {% for a in assignments %}
+        <option value="{{ a.id }}" {% if selected_assignment and selected_assignment.id == a.id %}selected{% endif %}>{{ a.course.name }} {{ a.section.name }} - {{ a.staff.first_name }} {{ a.staff.last_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Date</label>
+      <input class="form-control" type="date" name="attendance_date" value="{{ selected_date }}" required>
+    </div>
+    <div class="col-md-2"><button class="btn btn-primary w-100">Load</button></div>
+  </form>
+</div></div>
+
+{% if selected_assignment %}
+<form method="post">
+  {% csrf_token %}
+  <input type="hidden" name="assignment_id" value="{{ selected_assignment.id }}">
+  <input type="hidden" name="attendance_date" value="{{ selected_date }}">
+
+  <ul class="nav nav-pills mb-3" id="statusTabs">
+    <li class="nav-item"><button type="button" class="nav-link active" data-filter="all">All</button></li>
+    <li class="nav-item"><button type="button" class="nav-link" data-filter="P">Present</button></li>
+    <li class="nav-item"><button type="button" class="nav-link" data-filter="A">Absent</button></li>
+    <li class="nav-item"><button type="button" class="nav-link" data-filter="L">Leave</button></li>
+  </ul>
+
+  <div class="card border-0 shadow-sm">
+    <table class="table mb-0 align-middle" id="attendanceTable">
+      <thead>
+        <tr><th>Adm No</th><th>Student Name</th><th class="text-center">Present</th><th class="text-center">Absent</th><th class="text-center">Leave</th></tr>
+      </thead>
+      <tbody>
+        {% for s in students %}
+        {% with current=existing_map|get_item:s.id %}
+        <tr data-current="{{ current|default:'P' }}">
+          <td>{{ s.admission_no }}</td>
+          <td>{{ s.first_name }} {{ s.last_name }}</td>
+          <td class="text-center"><input type="radio" name="status_{{ s.id }}" value="P" {% if current == 'P' or not current %}checked{% endif %}></td>
+          <td class="text-center"><input type="radio" name="status_{{ s.id }}" value="A" {% if current == 'A' %}checked{% endif %}></td>
+          <td class="text-center"><input type="radio" name="status_{{ s.id }}" value="L" {% if current == 'L' %}checked{% endif %}></td>
+        </tr>
+        {% endwith %}
+        {% empty %}
+        <tr><td colspan="5">No students in this class/section.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-3">
+    <button class="btn btn-success px-4">Save Attendance</button>
+  </div>
+</form>
+{% endif %}
+
+<script>
+  const tabs = document.querySelectorAll('#statusTabs button[data-filter]');
+  const rows = document.querySelectorAll('#attendanceTable tbody tr[data-current]');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      rows.forEach(r => {
+        if (f === 'all' || r.dataset.current === f) r.style.display = '';
+        else r.style.display = 'none';
+      });
+    });
+  });
+  rows.forEach(r => {
+    r.querySelectorAll('input[type=radio]').forEach(el => {
+      el.addEventListener('change', (e) => { r.dataset.current = e.target.value; });
+    });
+  });
+</script>
+{% endblock %}

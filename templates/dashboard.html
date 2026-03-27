@@ -38,4 +38,31 @@
     <div class="col-md-3"><a class="module-card muted" href="/module/communication/"><h6>Communication</h6></a></div>
     <div class="col-md-3"><a class="module-card muted" href="/module/frontoffice/"><h6>Front Office</h6></a></div>
 </div>
+<div class="row g-3 mt-1">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm"><div class="card-body">
+            <h5>Attendance Mix</h5>
+            <canvas id="attChart" height="160"></canvas>
+        </div></div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm"><div class="card-body">
+            <h5>Students by Class</h5>
+            <canvas id="classChart" height="160"></canvas>
+        </div></div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+new Chart(document.getElementById('attChart'), {
+  type: 'doughnut',
+  data: {labels: ['Present', 'Absent', 'Leave'], datasets: [{data: [{{ att_present }}, {{ att_absent }}, {{ att_leave }}], backgroundColor: ['#1a936f', '#c44536', '#f4b400']}]},
+  options: {plugins: {legend: {position: 'bottom'}}}
+});
+new Chart(document.getElementById('classChart'), {
+  type: 'bar',
+  data: {labels: [{% for item in students_by_class %}'{{ item.course__name|default:"NA" }}',{% endfor %}], datasets: [{label: 'Students', data: [{% for item in students_by_class %}{{ item.total }},{% endfor %}], backgroundColor: '#15708a'}]},
+  options: {plugins: {legend: {display: false}}, scales: {y: {beginAtZero: true}}}
+});
+</script>
 {% endblock %}

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="portal-head student-head mb-4">
   <h1>Student Portal</h1>
-  <p>Attendance, fee receipts, and recent school updates.</p>
+  <p>Your personal attendance and fee status.</p>
 </div>
 <div class="row g-3">
   <div class="col-md-6">
@@ -31,10 +31,12 @@
       </table>
     </div></div>
     <div class="card border-0 shadow-sm"><div class="card-body">
-      <h5>Recent Admissions</h5>
+      <h5>Student Profile</h5>
       <ul class="list-group list-group-flush">
         {% for s in recent_students %}
-        <li class="list-group-item">{{ s.admission_no }} - {{ s.first_name }} {{ s.last_name }} ({{ s.course }} {{ s.section }})</li>
+        <li class="list-group-item"><strong>{{ s.admission_no }}</strong> - {{ s.first_name }} {{ s.last_name }}</li>
+        <li class="list-group-item">Class: {{ s.course }} {{ s.section }}</li>
+        <li class="list-group-item">Guardian: {{ s.guardian_name }}</li>
         {% empty %}<li class="list-group-item">No data</li>{% endfor %}
       </ul>
     </div></div>

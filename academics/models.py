@@ -1,6 +1,7 @@
 from django.db import models
 
 from core.models import AcademicSession, SchoolScopedModel
+from staff.models import Staff
 
 
 class Course(SchoolScopedModel):
@@ -47,3 +48,32 @@ class TimetableSlot(SchoolScopedModel):
 
     class Meta:
         indexes = [models.Index(fields=["school", "day_of_week"])]
+
+
+class ClassTeacherAssignment(SchoolScopedModel):
+    session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ("school", "session", "course", "section")
+
+    def __str__(self):
+        return f"{self.course} {self.section} -> {self.staff.first_name}"
+
+
+class SubjectTeacherAssignment(SchoolScopedModel):
+    session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ("school", "session", "course", "section", "subject")
+
+    def __str__(self):
+        return f"{self.course} {self.section} {self.subject} -> {self.staff.first_name}"

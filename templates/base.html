@@ -12,14 +12,8 @@
     <div class="container-fluid">
         <a class="navbar-brand text-white" href="/dashboard/">ERP School</a>
         <div class="d-flex align-items-center gap-2 flex-wrap">
-            {% if is_admin_portal %}
-            <a href="/portal/admin/" class="btn btn-sm btn-outline-light">Admin Portal</a>
-            {% endif %}
-            {% if is_teacher_portal %}
-            <a href="/portal/teacher/" class="btn btn-sm btn-outline-light">Teacher Portal</a>
-            {% endif %}
-            {% if is_student_portal %}
-            <a href="/portal/student/" class="btn btn-sm btn-outline-light">Student Portal</a>
+            {% if primary_portal_url %}
+            <a href="{{ primary_portal_url }}" class="btn btn-sm btn-outline-light">{{ primary_portal_label }}</a>
             {% endif %}
             {% if current_school %}
             <span class="badge text-bg-light">{{ current_school.name }}</span>

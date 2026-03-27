@@ -15,6 +15,7 @@ class APISmokeTests(APITestCase):
         self.user = User.objects.create_user(username="apiuser", password="StrongPass@12345")
         UserProfile.objects.create(user=self.user, school=self.school)
         Group.objects.get_or_create(name="api_manager")
+        Group.objects.get_or_create(name="student_portal")
 
     def auth(self):
         response = self.client.post(reverse("token_obtain_pair"), {"username": "apiuser", "password": "StrongPass@12345"}, format="json")
@@ -52,6 +53,15 @@ class APISmokeTests(APITestCase):
         self.auth()
         response = self.client.post("/api/v1/students/", {"admission_no": "A2", "first_name": "NoRole"}, format="json")
         self.assertEqual(response.status_code, 403)
+
+    def test_student_role_blocked_for_sensitive_endpoints(self):
+        student_group = Group.objects.get(name="student_portal")
+        self.user.groups.add(student_group)
+        self.auth()
+        finance_response = self.client.get("/api/v1/finance/invoices/")
+        attendance_response = self.client.get("/api/v1/attendance/students/")
+        self.assertEqual(finance_response.status_code, 403)
+        self.assertEqual(attendance_response.status_code, 403)
 
     def test_transport_route_list(self):
         Route.objects.create(school=self.school, name="North Route", code="NR-1")

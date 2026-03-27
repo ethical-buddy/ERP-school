@@ -54,3 +54,10 @@ class PortalTests(TestCase):
         self.client.login(username="s1", password="StrongPass@12345")
         response = self.client.get(reverse("admin_portal"))
         self.assertEqual(response.status_code, 403)
+
+    def test_student_cannot_open_finance_or_attendance(self):
+        self.client.login(username="s1", password="StrongPass@12345")
+        finance_response = self.client.get("/finance/")
+        attendance_response = self.client.get("/attendance/")
+        self.assertEqual(finance_response.status_code, 403)
+        self.assertEqual(attendance_response.status_code, 403)

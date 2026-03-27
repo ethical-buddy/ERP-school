@@ -3,8 +3,10 @@ from django.db.models import Count
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 
+from accounts.models import UserProfile
 from attendance.models import LeaveRequest, StaffAttendance, StudentAttendance
 from finance.models import ExpenseEntry, FeeInvoice
+from core.roles import is_admin, is_student, is_teacher
 from staff.models import Staff
 from students.models import Student
 
@@ -15,9 +17,9 @@ def _in_group(user, group_name):
 
 def _role_context(user):
     return {
-        "is_admin_portal": user.is_superuser or _in_group(user, "admin_portal"),
-        "is_teacher_portal": _in_group(user, "teacher_portal"),
-        "is_student_portal": _in_group(user, "student_portal"),
+        "is_admin_portal": is_admin(user),
+        "is_teacher_portal": is_teacher(user),
+        "is_student_portal": is_student(user),
     }
 
 
@@ -35,6 +37,8 @@ def post_login_router(request):
 
 @login_required
 def dashboard(request):
+    attendance_summary = StudentAttendance.objects.values("status").annotate(total=Count("id"))
+    status_map = {x["status"]: x["total"] for x in attendance_summary}
     context = {
         "student_count": Student.objects.count(),
         "staff_count": Staff.objects.count(),
@@ -43,6 +47,9 @@ def dashboard(request):
         "student_attendance_count": StudentAttendance.objects.count(),
         "staff_attendance_count": StaffAttendance.objects.count(),
         "students_by_class": list(Student.objects.values("course__name").annotate(total=Count("id")).order_by("course__name")[:8]),
+        "att_present": status_map.get("P", 0),
+        "att_absent": status_map.get("A", 0),
+        "att_leave": status_map.get("L", 0),
     }
     context.update(_role_context(request.user))
     return render(request, "dashboard.html", context)
@@ -61,6 +68,7 @@ def admin_portal(request):
         "expense_count": ExpenseEntry.objects.count(),
         "pending_leave_count": LeaveRequest.objects.filter(status="pending").count(),
         "recent_invoices": FeeInvoice.objects.select_related("student").order_by("-id")[:8],
+        "class_distribution": list(Student.objects.values("course__name").annotate(total=Count("id")).order_by("course__name")),
     }
     context.update(role)
     return render(request, "portals/admin.html", context)
@@ -88,11 +96,16 @@ def student_portal(request):
     if not role["is_student_portal"] and not role["is_admin_portal"]:
         return HttpResponseForbidden("Student portal access denied")
 
-    recent_students = Student.objects.select_related("course", "section").order_by("-id")[:10]
+    profile = UserProfile.objects.select_related("student").filter(user=request.user).first()
+    student = profile.student if profile else None
+    recent_students = Student.objects.select_related("course", "section").filter(id=student.id)[:1] if student else Student.objects.none()
+    attendance_qs = StudentAttendance.objects.select_related("student").filter(student_id=student.id).order_by("-attendance_date")[:20] if student else StudentAttendance.objects.none()
+    invoices_qs = FeeInvoice.objects.select_related("student").filter(student_id=student.id).order_by("-issue_date")[:10] if student else FeeInvoice.objects.none()
     context = {
+        "portal_student": student,
         "recent_students": recent_students,
-        "attendance_records": StudentAttendance.objects.select_related("student").order_by("-attendance_date")[:20],
-        "invoices": FeeInvoice.objects.select_related("student").order_by("-issue_date")[:10],
+        "attendance_records": attendance_qs,
+        "invoices": invoices_qs,
     }
     context.update(role)
     return render(request, "portals/student.html", context)

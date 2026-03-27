@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
 
 from accounts.models import UserProfile
-from academics.models import Course, Section
+from academics.models import ClassTeacherAssignment, Course, Section, Subject, SubjectTeacherAssignment
 from attendance.models import LeaveRequest, LeaveType, StaffAttendance, StudentAttendance
 from core.models import AcademicSession, FinancialYear, School, SchoolBranch
 from finance.models import ExpenseCategory, ExpenseEntry, FeeHead, FeeInvoice
@@ -19,7 +19,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         school, _ = School.objects.get_or_create(code="DEMO", defaults={"name": "Demo School"})
         branch, _ = SchoolBranch.objects.get_or_create(school=school, code="MAIN", defaults={"name": "Main Branch"})
-        AcademicSession.objects.get_or_create(
+        session, _ = AcademicSession.objects.get_or_create(
             school=school,
             title="2026-27",
             defaults={"start_date": "2026-04-01", "end_date": "2027-03-31", "is_active": True},
@@ -29,6 +29,9 @@ class Command(BaseCommand):
             title="FY 2026-27",
             defaults={"start_date": "2026-04-01", "end_date": "2027-03-31", "is_active": True},
         )
+
+        for code in ["PLAY", "NUR", "LKG", "UKG"] + [str(i) for i in range(1, 13)]:
+            Course.objects.get_or_create(school=school, code=code, defaults={"name": f"Class {code}" if code.isdigit() else code})
 
         admin_group, _ = Group.objects.get_or_create(name="admin_portal")
         teacher_group, _ = Group.objects.get_or_create(name="teacher_portal")
@@ -57,8 +60,6 @@ class Command(BaseCommand):
         student_user.groups.add(student_group)
 
         UserProfile.objects.get_or_create(user=admin_user, defaults={"school": school, "branch": branch, "designation": "System Administrator"})
-        UserProfile.objects.get_or_create(user=teacher_user, defaults={"school": school, "branch": branch, "designation": "Teacher"})
-        UserProfile.objects.get_or_create(user=student_user, defaults={"school": school, "branch": branch, "designation": "Student"})
 
         course10, _ = Course.objects.get_or_create(school=school, code="10", defaults={"name": "Class 10"})
         course9, _ = Course.objects.get_or_create(school=school, code="9", defaults={"name": "Class 9"})
@@ -80,6 +81,39 @@ class Command(BaseCommand):
                 "email": "teacher.demo@schoolerp.local",
                 "is_active": True,
             },
+        )
+
+        teacher_profile, _ = UserProfile.objects.get_or_create(user=teacher_user, defaults={"school": school, "branch": branch, "designation": "Teacher"})
+        teacher_profile.staff = staff_record
+        teacher_profile.school = school
+        teacher_profile.branch = branch
+        teacher_profile.save()
+
+        math_sub, _ = Subject.objects.get_or_create(school=school, code="MATH", defaults={"name": "Mathematics"})
+        sci_sub, _ = Subject.objects.get_or_create(school=school, code="SCI", defaults={"name": "Science"})
+
+        ClassTeacherAssignment.objects.get_or_create(
+            school=school,
+            session=session,
+            course=course10,
+            section=sec_a,
+            defaults={"staff": staff_record, "is_active": True},
+        )
+        SubjectTeacherAssignment.objects.get_or_create(
+            school=school,
+            session=session,
+            course=course10,
+            section=sec_a,
+            subject=math_sub,
+            defaults={"staff": staff_record, "is_active": True},
+        )
+        SubjectTeacherAssignment.objects.get_or_create(
+            school=school,
+            session=session,
+            course=course10,
+            section=sec_a,
+            subject=sci_sub,
+            defaults={"staff": staff_record, "is_active": True},
         )
 
         student_records = []
@@ -108,6 +142,13 @@ class Command(BaseCommand):
             )
             student_records.append(obj)
 
+        student_profile, _ = UserProfile.objects.get_or_create(user=student_user, defaults={"school": school, "branch": branch, "designation": "Student"})
+        if student_records:
+            student_profile.student = student_records[0]
+        student_profile.school = school
+        student_profile.branch = branch
+        student_profile.save()
+
         today = date.today()
         for st in student_records:
             StudentAttendance.objects.get_or_create(
@@ -134,8 +175,7 @@ class Command(BaseCommand):
             defaults={"reason": "Sample leave request", "status": "pending"},
         )
 
-        fee_head, _ = FeeHead.objects.get_or_create(school=school, name="Tuition Fee")
-        _ = fee_head
+        FeeHead.objects.get_or_create(school=school, name="Tuition Fee")
         for idx, st in enumerate(student_records[:3], start=1):
             FeeInvoice.objects.get_or_create(
                 school=school,
