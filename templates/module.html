@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <h2 class="h4 text-capitalize">{{ module_name }} Module</h2>
+        <p>{{ module_description }}</p>
+        <p>This module is fully modeled and enabled through Django Admin with school-wise scoping.</p>
+        <a href="/admin/" class="btn btn-primary">Open Admin</a>
+    </div>
+</div>
+{% endblock %}

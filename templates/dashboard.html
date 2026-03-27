@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero mb-4 p-4 rounded-4">
+    <h1 class="h3 text-white mb-2">School ERP Dashboard</h1>
+    <p class="text-white-50 mb-0">Secure modular ERP for multi-school operations.</p>
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ student_count }}</div><div class="label">Students</div></div></div>
+    <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ staff_count }}</div><div class="label">Staff</div></div></div>
+    <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ invoice_count }}</div><div class="label">Invoices</div></div></div>
+    <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ expense_count }}</div><div class="label">Expenses</div></div></div>
+    <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ student_attendance_count }}</div><div class="label">Student Attendance</div></div></div>
+    <div class="col-md-2 col-6"><div class="kpi-card"><div class="kpi">{{ staff_attendance_count }}</div><div class="label">Staff Attendance</div></div></div>
+</div>
+<div class="row g-3 mb-3">
+    <div class="col-md-3"><a class="module-card" href="/students/"><h5>Students</h5><p>Admission and profile management</p></a></div>
+    <div class="col-md-3"><a class="module-card" href="/staff/"><h5>Staff</h5><p>Employee management</p></a></div>
+    <div class="col-md-3"><a class="module-card" href="/attendance/"><h5>Attendance</h5><p>Daily attendance and leave</p></a></div>
+    <div class="col-md-3"><a class="module-card" href="/finance/"><h5>Finance</h5><p>Fee invoicing and accounts</p></a></div>
+</div>
+<div class="row g-3">
+    <div class="col-md-3"><a class="module-card muted" href="/module/academics/"><h6>Academics</h6></a></div>
+    <div class="col-md-3"><a class="module-card muted" href="/module/transport/"><h6>Transport</h6></a></div>
+    <div class="col-md-3"><a class="module-card muted" href="/module/library/"><h6>Library</h6></a></div>
+    <div class="col-md-3"><a class="module-card muted" href="/module/exams/"><h6>Exams</h6></a></div>
+    <div class="col-md-3"><a class="module-card muted" href="/module/inventory/"><h6>Inventory</h6></a></div>
+    <div class="col-md-3"><a class="module-card muted" href="/module/communication/"><h6>Communication</h6></a></div>
+    <div class="col-md-3"><a class="module-card muted" href="/module/frontoffice/"><h6>Front Office</h6></a></div>
+</div>
+{% endblock %}

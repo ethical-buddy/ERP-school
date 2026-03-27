@@ -1,0 +1,17 @@
+:root {
+  --bg-1: #0b3a53;
+  --bg-2: #15708a;
+  --bg-3: #f3f7fb;
+  --ink: #102235;
+  --muted: #688099;
+  --card: #ffffff;
+}
+body { background: radial-gradient(circle at top right, #d8ecf7, #eef4f9 45%, #f7fafc 80%); color: var(--ink); }
+.app-nav { background: linear-gradient(92deg, var(--bg-1), var(--bg-2)); }
+.hero { background: linear-gradient(120deg, #072a3d, #125f76); }
+.kpi-card { background: var(--card); border-radius: 14px; padding: 16px; box-shadow: 0 8px 24px rgba(14, 41, 65, 0.08); }
+.kpi { font-size: 1.45rem; font-weight: 700; }
+.label { color: var(--muted); font-size: 0.9rem; }
+.module-card { display: block; background: var(--card); border-radius: 14px; padding: 16px; text-decoration: none; color: var(--ink); box-shadow: 0 8px 24px rgba(14, 41, 65, 0.08); min-height: 110px; }
+.module-card:hover { transform: translateY(-2px); transition: 0.2s ease; color: var(--ink); }
+.module-card.muted { min-height: auto; }
