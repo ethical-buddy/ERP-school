@@ -15,6 +15,7 @@ except Exception:
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-only-change-this-to-a-long-random-secret-key-please-123456")
 DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
+DJANGO_ENV = os.getenv("DJANGO_ENV", "development").lower()
 
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h.strip()]
 CSRF_TRUSTED_ORIGINS = [h.strip() for h in os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if h.strip()]
@@ -133,16 +134,17 @@ LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
 
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = os.getenv("DJANGO_SECURE_COOKIES", "0") == "1"
-CSRF_COOKIE_SECURE = os.getenv("DJANGO_SECURE_COOKIES", "0") == "1"
+SESSION_COOKIE_SECURE = os.getenv("DJANGO_SECURE_COOKIES", "1" if DJANGO_ENV == "production" else "0") == "1"
+CSRF_COOKIE_SECURE = os.getenv("DJANGO_SECURE_COOKIES", "1" if DJANGO_ENV == "production" else "0") == "1"
 CSRF_COOKIE_HTTPONLY = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 SECURE_REFERRER_POLICY = "strict-origin"
-SECURE_HSTS_SECONDS = int(os.getenv("DJANGO_HSTS_SECONDS", "0"))
+SECURE_HSTS_SECONDS = int(os.getenv("DJANGO_HSTS_SECONDS", "31536000" if DJANGO_ENV == "production" else "0"))
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+SECURE_SSL_REDIRECT = os.getenv("DJANGO_SECURE_SSL_REDIRECT", "1" if DJANGO_ENV == "production" else "0") == "1"
 
 CACHES = {
     "default": {
@@ -191,6 +193,7 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "user": "300/minute",
         "anon": "50/minute",
+        "auth_token": "10/minute",
     },
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 50,

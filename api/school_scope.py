@@ -1,4 +1,5 @@
 from accounts.models import UserProfile
+from rest_framework.exceptions import PermissionDenied
 
 
 class SchoolScopedQuerysetMixin:
@@ -28,4 +29,6 @@ class SchoolScopedQuerysetMixin:
         school_id = self.get_user_school()
         if school_id is None and self.request.user.is_superuser:
             school_id = self.request.data.get("school")
+        if school_id is None:
+            raise PermissionDenied("School context is required for this user.")
         serializer.save(school_id=school_id)
